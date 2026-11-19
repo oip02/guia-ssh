@@ -145,8 +145,30 @@ Estos son los problemas que me encontré al hacer la práctica, y otros habitual
 | `Connection timed out` | IP equivocada o máquina virtual en NAT | Revisa la IP con `ip a` y pon la red en modo puente |
 | `Connection refused` | El servidor SSH no está instalado o está parado | `sudo systemctl start ssh` |
 | `Permission denied` | Usuario o contraseña incorrectos | Comprueba el usuario (`oip` en mi caso) y vuelve a escribir la contraseña |
+| Al día siguiente no conectaba: `Connection timed out` | El router le dio **otra IP por DHCP** a la máquina virtual (pasó de `.34` a `.136`) | Mirar la IP nueva con `ip a` en la consola de VMware y conectar a esa |
+| `REMOTE HOST IDENTIFICATION HAS CHANGED!` | Se reinstaló el servidor o es otra máquina con la misma IP, y la huella guardada en `known_hosts` ya no coincide | Si sabes que el cambio es legítimo, borra la huella antigua con `ssh-keygen -R 192.168.1.136` y vuelve a conectar |
 
 > **Nota:** abrí PowerShell como administrador, pero para usar `ssh` no hace falta. Basta con abrirlo normal.
+
+### 5.1 Lo que me pasó: la IP cambió por DHCP
+
+Al volver a la práctica otro día, `ssh` dejaba de responder. Entré en la consola de la máquina virtual en VMware, ejecuté `ip a` y vi que la interfaz `ens33` tenía ahora la IP **192.168.1.136**:
+
+![La interfaz ens33 con la nueva IP 192.168.1.136](imagenes/08-ip-cambiada-dhcp.png)
+
+Al conectar a la IP nueva, SSH me avisó de que la huella del servidor ya la conocía con otra dirección (`known_hosts:1: 192.168.1.34`). Como era el mismo servidor, la acepté con `yes`.
+
+> **Cómo evitarlo:** en un servidor real conviene darle una **IP fija**, ya sea con una reserva DHCP en el router o configurándola en Netplan (`/etc/netplan/`).
+
+### 5.2 Comprobar que el servidor escucha en el puerto 22
+
+Si dudas de si el servicio está escuchando, ejecuta en el servidor:
+
+```bash
+sudo ss -tlnp | grep :22
+```
+
+Debe aparecer una línea con `LISTEN` en `0.0.0.0:22` (y en `[::]:22` para IPv6). Si no sale nada, el servicio no está escuchando y hay que revisar `systemctl status ssh`.
 
 ---
 
