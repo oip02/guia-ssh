@@ -14,7 +14,8 @@ Esta guía explica cómo **instalar un servidor SSH** en Ubuntu Server y cómo *
   - [3.5 Conectarse desde Windows](#35-conectarse-desde-windows)
 - [4. Comprobación](#4-comprobación)
 - [5. Resolución de problemas](#5-resolución-de-problemas)
-- [6. Referencias](#6-referencias)
+- [6. Copiar archivos con SCP y SFTP](#6-copiar-archivos-con-scp-y-sftp)
+- [7. Referencias](#7-referencias)
 
 ---
 
@@ -149,7 +150,38 @@ Estos son los problemas que me encontré al hacer la práctica, y otros habitual
 
 ---
 
-## 6. Referencias
+## 6. Copiar archivos con SCP y SFTP
+
+Al instalar `openssh-server` también se instaló `openssh-sftp-server`, así que con el mismo usuario y contraseña de SSH se pueden **copiar archivos de forma cifrada** entre Windows y el servidor.
+
+### 6.1 SCP: copias rápidas en un solo comando
+
+| Qué quiero hacer | Comando (desde PowerShell) | Resultado |
+|---|---|---|
+| Subir un archivo al servidor | `scp .\prueba.txt oip@192.168.1.136:/home/oip/` | El archivo queda en mi carpeta personal de `erver` |
+| Bajar un archivo del servidor | `scp oip@192.168.1.136:/etc/hostname .\hostname-servidor.txt` | Copia el archivo a la carpeta actual de Windows |
+| Copiar una carpeta entera | `scp -r .\carpeta oip@192.168.1.136:/home/oip/` | La opción `-r` copia también el contenido |
+
+Así lo comprobé en mi laboratorio. Como la máquina virtual había cambiado de IP (ahora `192.168.1.136`), SSH me avisó de que esa misma huella ya la conocía con la dirección `192.168.1.34` y tuve que confirmarla otra vez con `yes`:
+
+![Copia de archivos con scp entre Windows y el servidor](imagenes/07-scp.png)
+
+### 6.2 SFTP: sesión interactiva
+
+Con `sftp oip@192.168.1.136` se abre una sesión en la que se puede navegar y copiar varios archivos:
+
+```text
+sftp> ls          lista los archivos del servidor
+sftp> put archivo sube un archivo
+sftp> get archivo descarga un archivo
+sftp> bye         cierra la sesión
+```
+
+> **Consejo:** en la ruta del servidor siempre van los dos puntos después de la IP (`oip@192.168.1.136:/ruta`). Si se olvidan, `scp` hace una copia local en Windows en vez de enviar el archivo.
+
+---
+
+## 7. Referencias
 
 - [Documentación de Ubuntu Server sobre OpenSSH](https://ubuntu.com/server/docs/openssh-server)
 - [Página del proyecto OpenSSH](https://www.openssh.com/)
