@@ -14,7 +14,12 @@ Esta guía explica cómo **instalar un servidor SSH** en Ubuntu Server y cómo *
   - [3.5 Conectarse desde Windows](#35-conectarse-desde-windows)
 - [4. Comprobación](#4-comprobación)
 - [5. Resolución de problemas](#5-resolución-de-problemas)
+  - [5.1 Lo que me pasó: la IP cambió por DHCP](#51-lo-que-me-pasó-la-ip-cambió-por-dhcp)
+  - [5.2 Comprobar que el servidor escucha en el puerto 22](#52-comprobar-que-el-servidor-escucha-en-el-puerto-22)
+  - [5.3 Nota sobre PowerShell](#53-nota-sobre-powershell)
 - [6. Copiar archivos con SCP y SFTP](#6-copiar-archivos-con-scp-y-sftp)
+  - [6.1 SCP: copias rápidas en un solo comando](#61-scp-copias-rápidas-en-un-solo-comando)
+  - [6.2 SFTP: sesión interactiva](#62-sftp-sesión-interactiva)
 - [7. Referencias](#7-referencias)
 
 ---
@@ -34,7 +39,7 @@ El servidor SSH escucha por defecto en el **puerto 22/TCP**. En Ubuntu, el progr
 | Virtualizador | VMware Workstation | Crear la máquina virtual |
 | Servidor | Ubuntu Server 26.04.1 LTS, 6 GB de RAM, 2 CPU, disco de 20 GB | Equipo al que me conecto |
 | Nombre y usuario del servidor | `erver` / `oip` | Datos para iniciar sesión |
-| IP del servidor | `192.168.1.34/24` (por DHCP, interfaz `ens33`) | Dirección a la que me conecto |
+| IP del servidor | `192.168.1.34/24` al principio; después `192.168.1.136/24` (por DHCP, interfaz `ens33`, ver [5.1](#51-lo-que-me-pasó-la-ip-cambió-por-dhcp)) | Dirección a la que me conecto |
 | Cliente | Windows con PowerShell 5.1 | Equipo desde el que administro |
 
 Para repetir la práctica necesitas:
@@ -148,7 +153,6 @@ Estos son los problemas que me encontré al hacer la práctica, y otros habitual
 | Al día siguiente no conectaba: `Connection timed out` | El router le dio **otra IP por DHCP** a la máquina virtual (pasó de `.34` a `.136`) | Mirar la IP nueva con `ip a` en la consola de VMware y conectar a esa |
 | `REMOTE HOST IDENTIFICATION HAS CHANGED!` | Se reinstaló el servidor o es otra máquina con la misma IP, y la huella guardada en `known_hosts` ya no coincide | Si sabes que el cambio es legítimo, borra la huella antigua con `ssh-keygen -R 192.168.1.136` y vuelve a conectar |
 
-> **Nota:** abrí PowerShell como administrador, pero para usar `ssh` no hace falta. Basta con abrirlo normal.
 
 ### 5.1 Lo que me pasó: la IP cambió por DHCP
 
@@ -169,6 +173,10 @@ sudo ss -tlnp | grep :22
 ```
 
 Debe aparecer una línea con `LISTEN` en `0.0.0.0:22` (y en `[::]:22` para IPv6). Si no sale nada, el servicio no está escuchando y hay que revisar `systemctl status ssh`.
+
+### 5.3 Nota sobre PowerShell
+
+En la práctica abrí PowerShell **como administrador**, pero para usar `ssh` o `scp` no hace falta: basta con abrirlo de forma normal. Trabajar con los mínimos permisos necesarios es una buena práctica de seguridad.
 
 ---
 
