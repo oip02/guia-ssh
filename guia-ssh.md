@@ -223,3 +223,11 @@ sftp> bye         cierra la sesión
 ## Información del proyecto
 
 Esta documentación se ha elaborado utilizando Markdown. El control de versiones se realiza mediante Git y el repositorio remoto se encuentra alojado en GitHub: <https://github.com/oip02/guia-ssh>.
+
+---
+
+## Próximas mejoras
+
+- Configurar una **IP fija** en el servidor con Netplan, para que no vuelva a cambiar por DHCP.
+- Explicar el acceso con **claves SSH** (`ssh-keygen` y `ssh-copy-id`) en lugar de contraseña.
+- Añadir un apartado para hacer **copias de seguridad** del servidor a Windows con `scp`.
