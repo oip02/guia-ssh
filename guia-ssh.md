@@ -21,6 +21,7 @@ Esta guía explica cómo **instalar un servidor SSH** en Ubuntu Server y cómo *
   - [6.1 SCP: copias rápidas en un solo comando](#61-scp-copias-rápidas-en-un-solo-comando)
   - [6.2 SFTP: sesión interactiva](#62-sftp-sesión-interactiva)
 - [7. Referencias](#7-referencias)
+- [Información del proyecto](#información-del-proyecto)
 
 ---
 
@@ -216,3 +217,9 @@ sftp> bye         cierra la sesión
 - [Documentación de Ubuntu Server sobre OpenSSH](https://ubuntu.com/server/docs/openssh-server)
 - [Página del proyecto OpenSSH](https://www.openssh.com/)
 - [Cliente OpenSSH en Windows (Microsoft Learn)](https://learn.microsoft.com/es-es/windows-server/administration/openssh/openssh_overview)
+
+---
+
+## Información del proyecto
+
+Esta documentación se ha elaborado utilizando Markdown. El control de versiones se realiza mediante Git y el repositorio remoto se encuentra alojado en GitHub: <https://github.com/oip02/guia-ssh>.
