@@ -20,6 +20,7 @@ Esta guía explica cómo **instalar un servidor SSH** en Ubuntu Server y cómo *
 - [6. Copiar archivos con SCP y SFTP](#6-copiar-archivos-con-scp-y-sftp)
   - [6.1 SCP: copias rápidas en un solo comando](#61-scp-copias-rápidas-en-un-solo-comando)
   - [6.2 SFTP: sesión interactiva](#62-sftp-sesión-interactiva)
+- [Recomendaciones de seguridad](#recomendaciones-de-seguridad)
 - [7. Referencias](#7-referencias)
 - [Información del proyecto](#información-del-proyecto)
 
@@ -209,6 +210,20 @@ sftp> bye         cierra la sesión
 ```
 
 > **Consejo:** en la ruta del servidor siempre van los dos puntos después de la IP (`oip@192.168.1.136:/ruta`). Si se olvidan, `scp` hace una copia local en Windows en vez de enviar el archivo.
+
+---
+
+## Recomendaciones de seguridad
+
+Para un servidor SSH que vaya a usarse de verdad, conviene aplicar al menos estas medidas en `/etc/ssh/sshd_config` y en el sistema:
+
+1. **No permitir el acceso directo como *root*:** `PermitRootLogin no`. Se entra con un usuario normal (como `oip`) y se usa `sudo` cuando haga falta.
+2. **Limitar los intentos de acceso:** `MaxAuthTries 3`, para dificultar que alguien pruebe contraseñas una y otra vez.
+3. **Abrir el puerto 22 solo a la red local** con el cortafuegos: `sudo ufw allow from 192.168.1.0/24 to any port 22`.
+4. **Mantener el sistema actualizado** con `sudo apt update && sudo apt upgrade`, porque las actualizaciones corrigen fallos de seguridad de OpenSSH.
+5. **Comprobar la huella del servidor** la primera vez que te conectas, y desconfiar si SSH avisa de que ha cambiado sin motivo.
+
+> **Recuerda:** después de cambiar `sshd_config` hay que reiniciar el servicio con `sudo systemctl restart ssh`, y es mejor probar la conexión desde otra terminal antes de cerrar la sesión actual.
 
 ---
 
